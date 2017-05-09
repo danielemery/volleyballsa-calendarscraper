@@ -68,13 +68,14 @@ function scrapeGrade(name, uri, callback) {
 
                         var duty = match.find(".note").text();
                         var teams = match.text().replace(duty, "");
+                        teams = teams.split(" v ");
 
                         var location = match.next().next();
                         var time = location.next();
 
                         date.games.push({
                             teams: teams,
-                            duty: duty,
+                            duty: duty.replace("Duty Team: ",""),
                             time: time.text(),
                             location: location.text()
                         });

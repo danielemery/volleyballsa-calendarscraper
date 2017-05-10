@@ -50,7 +50,7 @@ function sortIntoTeams(roundData, callback){
         league.rounds.forEach(function(round){
             round.dates.forEach(function(date){
                 date.games.forEach(function(game){
-                    let dateTime = moment.tz(date.date + " " + game.time, DATE_FORMAT, process.env.TZ).toDate();
+                    let dateTime = moment.tz(date.date + " " + game.time, DATE_FORMAT, TIME_ZONE).tz("UTC").toDate();
                     game.teams.forEach(function(team){
                         team = ensureInitialised(result, team);
                         team.games.push({

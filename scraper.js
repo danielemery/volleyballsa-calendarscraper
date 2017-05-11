@@ -15,7 +15,7 @@ module.exports = function(calendarUri, callback) {
         // Scrape grade options from dropdown
         var promises = [];
         var $ = cheerio.load(html);
-        var r = $('#fixtures-select').children().each(function(){
+        var r = $('#fixtures-grade').children().each(function(){
             var gradeName = $(this).text();
             var gradeID = $(this).attr("value");
             // For each grade start a scrape task

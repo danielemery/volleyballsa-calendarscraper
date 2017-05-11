@@ -1,7 +1,7 @@
 const cheerio = require('cheerio'),
     request = require('request-promise');
 
-module.exports = (calendarUri) => {
+var getGrades = (calendarUri) => {
     // Load main calendar page.
     return request({
         method: 'GET',
@@ -9,20 +9,20 @@ module.exports = (calendarUri) => {
         gzip: true
     }).then((html) => {
         // Scrape grade options from dropdown
-        var promises = [];
         var $ = cheerio.load(html);
+        var grades = [];
         var r = $('#fixtures-grade').children().each(function() {
-            var gradeName = $(this).text();
-            var gradeID = $(this).attr("value");
-            // For each grade start a scrape task
-            promises.push(scrapeGrade(gradeName, calendarUri + "?grade=" + gradeID));
+            grades.push({
+                name: $(this).text(),
+                id: $(this).attr("value")
+            });
         });
-
-        return Promise.all(promises);
+        return grades;
     });
 }
 
-var scrapeGrade = (name, uri) => {
+var scrapeGrade = (name, calendarUri, gradeID) => {
+    var uri = calendarUri + "?grade=" + gradeID;
     return request({
         method: 'GET',
         uri: uri,
@@ -75,4 +75,9 @@ var scrapeGrade = (name, uri) => {
             rounds: rounds
         }
     });
+}
+
+module.exports = {
+    getGrades: getGrades,
+    scrapeGrade: scrapeGrade
 }

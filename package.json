@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "cheerio": "^0.22.0",
+    "fs-extra": "^3.0.1",
     "ical-generator": "^0.2.9",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",

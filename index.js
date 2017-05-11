@@ -11,19 +11,19 @@ const MATCH_DURATION = 1000 * 60 * 90; //90 Minutes
 
 const CALENDAR_DIRECTORY = './calendars';
 
-scraper(CALENDAR_URI, function(calendarData){
-    sortIntoTeams(calendarData, function(teamData){
+scraper(CALENDAR_URI).then((calendarData) => {
+    sortIntoTeams(calendarData, (teamData) => {
         if (!fs.existsSync(CALENDAR_DIRECTORY)){
             fs.mkdirSync(CALENDAR_DIRECTORY);
         }
-        Object.keys(teamData).forEach(function(v){
+        Object.keys(teamData).forEach((v) => {
             let cal = ical({
                 domain: 'auvc.com.au',
                 name: v + " 2017 State League",
                 timezone: TIME_ZONE
             });
             let data = teamData[v];
-            data.games.forEach(function(g){
+            data.games.forEach((g) => {
                 cal.createEvent({
                     summary: g.name,
                     location: g.location,
@@ -31,7 +31,7 @@ scraper(CALENDAR_URI, function(calendarData){
                     end: new Date(g.datetime.getTime() + MATCH_DURATION)
                 });
             });
-            data.duties.forEach(function(d){
+            data.duties.forEach((d) => {
                 cal.createEvent({
                     summary: d.name,
                     location: d.location,
@@ -44,14 +44,14 @@ scraper(CALENDAR_URI, function(calendarData){
     })
 });
 
-function sortIntoTeams(roundData, callback){
+var sortIntoTeams = (roundData, callback) => {
     let result = {};
-    roundData.forEach(function(league){
-        league.rounds.forEach(function(round){
-            round.dates.forEach(function(date){
-                date.games.forEach(function(game){
+    roundData.forEach((league) => {
+        league.rounds.forEach((round) => {
+            round.dates.forEach((date) => {
+                date.games.forEach((game) => {
                     let dateTime = moment.tz(date.date + " " + game.time, DATE_FORMAT, TIME_ZONE).tz("UTC").toDate();
-                    game.teams.forEach(function(team){
+                    game.teams.forEach((team) => {
                         team = ensureInitialised(result, team);
                         team.games.push({
                             name: round.name + ": " + game.teams[0] + " vs " + game.teams[1],
@@ -72,7 +72,7 @@ function sortIntoTeams(roundData, callback){
     callback(result);
 }
 
-function ensureInitialised(map, teamName) {
+var ensureInitialised = (map, teamName) => {
     if(!map[teamName]) {
         map[teamName] = {
             games: [],

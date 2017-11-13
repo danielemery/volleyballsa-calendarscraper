@@ -6,7 +6,7 @@ const ical = require('ical-generator'),
 const DATE_FORMAT = 'dddd Do MMMM YYYY HH:mma';
 const TIME_ZONE = "Australia/Adelaide";
 
-const CALENDAR_URI = 'http://www.volleyballsa.com.au/stateleague/fixtures';
+const CALENDAR_URI = 'http://www.volleyballsa.com.au/recfixturestest/fixtures';
 const MATCH_DURATION = 1000 * 60 * 90; //90 Minutes
 
 const CALENDAR_DIRECTORY = './calendars';
@@ -47,7 +47,7 @@ var writeCalendar = (teams) => {
                 end: new Date(d.datetime.getTime() + MATCH_DURATION)
             });
         });
-        return fs.outputFile(CALENDAR_DIRECTORY + "/" + v + ".ics", cal.toString());
+        return fs.outputFile(CALENDAR_DIRECTORY + "/" + v.replace(/\?/g, "") + ".ics", cal.toString());
     });
 }
 

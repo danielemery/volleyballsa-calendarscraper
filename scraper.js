@@ -37,6 +37,7 @@ var scrapeGrade = (name, calendarUri, gradeID) => {
             var c = tr.attr('class');
             switch(c) {
                 case "round":
+                case "round past":
                     round = { 
                         name: tr.find("th").text(),
                         dates: []
@@ -44,6 +45,7 @@ var scrapeGrade = (name, calendarUri, gradeID) => {
                     rounds.push(round);
                     break;
                 case "date":
+                case "date past":
                     date = {
                         date: tr.find("th").text(),
                         games : []
@@ -52,6 +54,7 @@ var scrapeGrade = (name, calendarUri, gradeID) => {
                     break;
                 case "result":
                 case "result last":
+                case "result past":
                     var match = tr.children().first();
 
                     var duty = match.find(".note").text();

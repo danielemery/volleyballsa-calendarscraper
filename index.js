@@ -4,9 +4,10 @@ const ical = require('ical-generator'),
     scraper = require('./scraper');
 
 const DATE_FORMAT = 'dddd Do MMMM YYYY HH:mma';
+const TIME_ZONE = "Australia/Adelaide";
 
 const CALENDAR_URI = 'http://www.volleyballsa.com.au/recfixturestest/fixtures';
-const MATCH_DURATION = 1000 * 60 * 90; //90 Minutes
+const MATCH_DURATION = 1000 * 60 * 45; //45 Minutes
 
 const CALENDAR_DIRECTORY = './calendars';
 
@@ -25,8 +26,8 @@ scraper.getGrades(CALENDAR_URI).then((grades) => {
 var writeCalendar = (teams) => {
     Object.keys(teams).forEach((v) => {
         let cal = ical({
-            domain: 'auvc.com.au',
-            name: v + " 2017 State League",
+            domain: 'vcalendars.demery.com.au',
+            name: v + " 2017-2018 Recreation Beach",
             timezone: TIME_ZONE
         });
         let data = teams[v];
@@ -46,7 +47,7 @@ var writeCalendar = (teams) => {
                 end: new Date(d.datetime.getTime() + MATCH_DURATION)
             });
         });
-        return fs.outputFile(CALENDAR_DIRECTORY + "/" + v.replace(/\?/g, "") + ".ics", cal.toString());
+        return fs.outputFile(CALENDAR_DIRECTORY + "/" + v.replace(/\?|'|’/g, "") + ".ics", cal.toString());
     });
 }
 

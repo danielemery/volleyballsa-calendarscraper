@@ -1,10 +1,9 @@
 const ical = require('ical-generator'),
-    moment = require('moment-timezone'),
+    moment = require('moment'),
     fs = require("fs-extra"),
     scraper = require('./scraper');
 
 const DATE_FORMAT = 'dddd Do MMMM YYYY HH:mma';
-const TIME_ZONE = "Australia/Adelaide";
 
 const CALENDAR_URI = 'http://www.volleyballsa.com.au/recfixturestest/fixtures';
 const MATCH_DURATION = 1000 * 60 * 90; //90 Minutes
@@ -56,7 +55,8 @@ var sortIntoTeams = (grade) => {
     grade.rounds.forEach((round) => {
         round.dates.forEach((date) => {
             date.games.forEach((game) => {
-                let dateTime = moment.tz(date.date + " " + game.time, DATE_FORMAT, TIME_ZONE).tz("UTC").toDate();
+                var fullDate = date.date + " " + game.time;
+                let dateTime = moment(fullDate, DATE_FORMAT).toDate();
                 game.teams.forEach((team) => {
                     team = ensureInitialised(result, team);
                     team.games.push({

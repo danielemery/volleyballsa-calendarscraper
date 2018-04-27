@@ -6,8 +6,8 @@ const ical = require('ical-generator'),
 const DATE_FORMAT = 'dddd Do MMMM YYYY HH:mma';
 const TIME_ZONE = "Australia/Adelaide";
 
-const CALENDAR_URI = 'http://www.volleyballsa.com.au/recfixturestest/fixtures';
-const MATCH_DURATION = 1000 * 60 * 45; //45 Minutes
+const CALENDAR_URI = 'http://www.volleyballsa.com.au/stateleague/fixtures';
+const MATCH_DURATION = 1000 * 60 * 90; //90 Minutes
 
 const CALENDAR_DIRECTORY = './calendars';
 
@@ -27,7 +27,7 @@ var writeCalendar = (teams) => {
     Object.keys(teams).forEach((v) => {
         let cal = ical({
             domain: 'vcalendars.demery.com.au',
-            name: v + " 2017-2018 Recreation Beach",
+            name: v + " 2018 State League Season",
             timezone: TIME_ZONE
         });
         let data = teams[v];
@@ -59,14 +59,14 @@ var sortIntoTeams = (grade) => {
                 var fullDate = date.date + " " + game.time;
                 let dateTime = moment(fullDate, DATE_FORMAT).toDate();
                 game.teams.forEach((team) => {
-                    team = ensureInitialised(result, team);
+                    team = ensureInitialised(result, team, grade.name);
                     team.games.push({
                         name: round.name + ": " + game.teams[0] + " vs " + game.teams[1],
                         datetime: dateTime,
                         location: game.location
                     });
                 });
-                let dutyTeam = ensureInitialised(result, game.duty);
+                let dutyTeam = ensureInitialised(result, game.duty, grade.name);
                 dutyTeam.duties.push({
                     name: "DUTY: " + game.teams[0] + " vs " + game.teams[1],
                     datetime: dateTime,
@@ -78,12 +78,13 @@ var sortIntoTeams = (grade) => {
     return result;
 }
 
-var ensureInitialised = (map, teamName) => {
-    if(!map[teamName]) {
-        map[teamName] = {
+var ensureInitialised = (map, teamName, divName) => {
+    let name = teamName + " (" + divName.substring(divName.indexOf('/') + 2) + ")";
+    if(!map[name]) {
+        map[name] = {
             games: [],
             duties: []
         }
     }
-    return map[teamName];
+    return map[name];
 }
